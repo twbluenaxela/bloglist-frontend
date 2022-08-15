@@ -11,18 +11,18 @@ additionalRepositories:
 tasks:
   - name: backend
     before: |
-     cd ../backend
+      cd ../backend
     init: |
-      echo npm install
+      npm install
     command: |
-      echo npm run dev
+      npm run dev
 
   - name: frontend
     init: |
-      echo npm install
-      echo npm run build
+      npm install
+      npm run build
     command: | 
-      echo npm run start
+      npm run start
 
 
 
