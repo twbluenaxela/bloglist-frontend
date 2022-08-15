@@ -6,12 +6,12 @@
 additionalRepositories:
   - url: https://github.com/twbluenaxela/bloglist
     # checkoutLocation is relative to /workspaces
-    checkoutLocation: bloglist
+    checkoutLocation: backend
 
 tasks:
   - name: backend
     before: |
-     cd ../bloglist
+     cd ../backend
     init: |
       echo npm install
     command: |
