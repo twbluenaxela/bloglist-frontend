@@ -11,6 +11,74 @@ const Notification = ({ message }) => {
   return <div className="error">{message}</div>;
 };
 
+const BlogForm = ({
+  newBlog, 
+  blogs, 
+  setBlogs, 
+  setNewBlog, 
+  user,
+  setErrorMessage}) => {
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
+
+  const createBlog = async (event) => {
+    event.preventDefault()
+    console.log('creating new blog...', title, author, url);
+    try {
+      const blog = await blogService.create({
+        title,
+        author,
+        url
+      })
+      blogService.setToken(user.token)
+      setBlogs(blogs.concat(blog))
+      setNewBlog('')
+
+    } catch (exception) {
+      setErrorMessage('Error creating blog')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+    
+  }
+
+  return(
+    <form onSubmit={createBlog} >
+      <h2>create new</h2>
+      <div>
+        title: 
+        <input
+          type="text"
+          value={title}
+          name="Title"
+          onChange={({ target }) => setTitle(target.value)}
+        />
+      </div>
+      <div>
+        author: 
+        <input
+          type="text"
+          value={author}
+          name="Author"
+          onChange={({ target }) => setAuthor(target.value)}
+        />
+      </div>
+      <div>
+        url: 
+        <input
+          type="text"
+          value={url}
+          name="Url"
+          onChange={({ target }) => setUrl(target.value)}
+        />
+      </div>
+      <button type="submit">create</button>
+    </form>
+  )
+}
+
 const BlogList = ({ blogs, user }) => {
   return (
     <div>
@@ -83,6 +151,7 @@ const LoginForm = ({
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
+  const [newBlog, setNewBlog] = useState('')
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -119,6 +188,14 @@ const App = () => {
 
   return (
     <div>
+      <BlogForm
+      newBlog={newBlog}
+      blogs={blogs}
+      setBlogs={setBlogs}
+      setNewBlog={setNewBlog}
+      user={user}
+      setErrorMessage={setErrorMessage}
+        />
       <BlogList blogs={blogs} user={user} />
     </div>
   );
