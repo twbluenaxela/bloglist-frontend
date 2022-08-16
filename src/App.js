@@ -2,13 +2,19 @@ import { useState, useEffect } from "react";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
+import './index.css'
 
-const Notification = ({ message }) => {
+const Notification = ({ message, type }) => {
   if (message === null) {
     return null;
   }
 
-  return <div className="error">{message}</div>;
+  if(type === 'error'){
+    return <div className="error">{message}</div>;
+  }else if (type === 'success'){
+    return <div className="success">{message}</div>
+  }
+  
 };
 
 const BlogForm = ({
@@ -17,7 +23,8 @@ const BlogForm = ({
   setBlogs, 
   setNewBlog, 
   user,
-  setErrorMessage}) => {
+  message,
+  setMessage}) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -34,11 +41,18 @@ const BlogForm = ({
       blogService.setToken(user.token)
       setBlogs(blogs.concat(blog))
       setNewBlog('')
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+      setMessage(`a new blog ${blog.title} by ${blog.author} added`);
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
 
     } catch (exception) {
-      setErrorMessage('Error creating blog')
+      setMessage('Error creating blog')
       setTimeout(() => {
-        setErrorMessage(null)
+        setMessage(null)
       }, 5000)
     }
     
@@ -46,6 +60,7 @@ const BlogForm = ({
 
   return(
     <form onSubmit={createBlog} >
+      {message !== "" && <Notification message={message} type={'success'} />}
       <h2>create new</h2>
       <div>
         title: 
@@ -97,7 +112,8 @@ const LoginForm = ({
   password,
   setPassword,
   setUser,
-  setErrorMessage,
+  message,
+  setMessage,
 }) => {
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -116,15 +132,16 @@ const LoginForm = ({
       setUsername("");
       setPassword("");
     } catch (exception) {
-      setErrorMessage("Wrong credentials");
+      setMessage("Wrong username or password");
       setTimeout(() => {
-        setErrorMessage(null);
+        setMessage(null);
       }, 5000);
     }
   };
 
   return (
     <form onSubmit={handleLogin}>
+      {message !== "" && <Notification message={message} type={'error'} />}
       <h1>login</h1>
       <div>
         username
@@ -154,7 +171,7 @@ const App = () => {
   const [newBlog, setNewBlog] = useState('')
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [message, setMessage] = useState("");
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -173,14 +190,14 @@ const App = () => {
   if (user === null) {
     return (
       <div>
-        {errorMessage !== "" && <Notification message={errorMessage} />}
         <LoginForm
           username={username}
           setUsername={setUsername}
           password={password}
           setPassword={setPassword}
           setUser={setUser}
-          setErrorMessage={setErrorMessage}
+          message={message}
+          setMessage={setMessage}
         />
       </div>
     );
@@ -194,7 +211,8 @@ const App = () => {
       setBlogs={setBlogs}
       setNewBlog={setNewBlog}
       user={user}
-      setErrorMessage={setErrorMessage}
+      message={message}
+      setMessage={setMessage}
         />
       <BlogList blogs={blogs} user={user} />
     </div>
