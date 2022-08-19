@@ -4,7 +4,9 @@ const BlogList = ({ blogs }) => {
   console.log('Blogs, ',blogs)
   return (
     <div>
-      {blogs.map((blog) => (
+      {blogs
+      .sort((a, b) => b.likes - a.likes)
+      .map((blog) => (
         <Blog key={blog.id} blog={blog} />
       ))}
     </div>
