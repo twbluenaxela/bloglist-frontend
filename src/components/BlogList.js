@@ -1,18 +1,15 @@
 import Blog from './Blog'
 
-const BlogList = ({ blogs, user }) => {
+const BlogList = ({ blogs, removeBlog }) => {
   console.log('Blogs, ',blogs)
 
-  const handleDelete = async (event) => {
-
-  }
 
   return (
     <div>
       {blogs
       .sort((a, b) => b.likes - a.likes)
       .map((blog) => (
-        <Blog key={blog.id} blog={blog} deleteBlog={handleDelete} />
+        <Blog key={blog.id} blog={blog} deleteBlog={removeBlog} />
       ))}
     </div>
   );

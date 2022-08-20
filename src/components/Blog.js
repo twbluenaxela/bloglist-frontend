@@ -1,15 +1,7 @@
 import { useState } from "react"
 import blogService from '../services/blogs'
 
-// const BlogExtraInfo = ({url, likes, user}) => (
-//   <div>
-//     <p>{url}</p>
-//     <p>{likes}</p>
-//     <p>{user}</p>
-//   </div>
-// )
-
-const Blog = ({ blog, user }) => {
+const Blog = ({ blog, deleteBlog }) => {
   const [visible, setVisible] = useState(false)
   const [likeCount, setLikeCount] = useState(blog.likes)
 
@@ -32,14 +24,13 @@ const Blog = ({ blog, user }) => {
     console.log('Added a like!')
   }
 
-  const removeBlog = async () =>{
+  const removeBlog = async (event) =>{
+    event.preventDefault()
     const blogId = blog.id
+    const blogUser = blog.user.name
     if(window.confirm(`Remove blog ${blog.title} by ${blog.author}`)){
-      await blogService.remove(blogId)
-
+      await deleteBlog(blogId, blogUser)
     }
-    
-    
 
   }
 
