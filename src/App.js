@@ -28,7 +28,10 @@ const App = () => {
   }
 
   const removeBlog = async (blogId, blogUser) => {
-    if(user.name === blogUser){
+    console.log('User ', user)
+    console.log('App side user.username', user.username)
+    console.log('Blog element side ', blogUser)
+    if(user.username === blogUser){
       await blogService.remove(blogId)
       setBlogs(blogs.filter((blog) => blog.id !== blogId))
     }

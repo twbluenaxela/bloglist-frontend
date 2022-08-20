@@ -27,7 +27,7 @@ const Blog = ({ blog, deleteBlog }) => {
   const removeBlog = async (event) =>{
     event.preventDefault()
     const blogId = blog.id
-    const blogUser = blog.user.name
+    const blogUser = blog.user.username
     if(window.confirm(`Remove blog ${blog.title} by ${blog.author}`)){
       await deleteBlog(blogId, blogUser)
     }
