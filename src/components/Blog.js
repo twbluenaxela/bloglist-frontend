@@ -9,7 +9,7 @@ import blogService from '../services/blogs'
 //   </div>
 // )
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, user }) => {
   const [visible, setVisible] = useState(false)
   const [likeCount, setLikeCount] = useState(blog.likes)
 
@@ -32,6 +32,17 @@ const Blog = ({ blog }) => {
     console.log('Added a like!')
   }
 
+  const removeBlog = async () =>{
+    const blogId = blog.id
+    if(window.confirm(`Remove blog ${blog.title} by ${blog.author}`)){
+      await blogService.remove(blogId)
+
+    }
+    
+    
+
+  }
+
   // blog.user.name = blog.user.name ? blog.user.name : ''
   blog.user ??= ''
   blog.user.name ??= ''
@@ -50,6 +61,7 @@ return (
         <button onClick={addLike}>like</button>
       </div>
       <p>{blog.user.name}</p>
+      <button onClick={removeBlog} >remove</button>
     </div>
     : '' }
 

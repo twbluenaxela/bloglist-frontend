@@ -96,7 +96,7 @@ const App = () => {
       createBlog={addBlog}
         />
       </Toggleable>
-      <BlogList blogs={blogs}/>
+      <BlogList blogs={blogs} user={user}/>
       
     </div>
   );
