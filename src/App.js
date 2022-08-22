@@ -26,6 +26,7 @@ const App = () => {
       setBlogs(blogs.concat(returnedBlog))
     })
   }
+  
 
   const removeBlog = async (blogId, blogUser) => {
     // console.log('User ', user)
