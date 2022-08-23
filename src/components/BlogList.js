@@ -1,10 +1,13 @@
 import Blog from './Blog'
+import blogService from '../services/blogs'
 
-const BlogList = ({ blogs, user }) => {
+const BlogList = ({ blogs, removeBlog }) => {
   console.log('Blogs, ',blogs)
 
-  const handleDelete = async (event) => {
-
+  const addLike = async (blog, likeCount) => {
+    const blogId = blog.id
+    await blogService.update(blogId, {...blog, likes: likeCount + 1})
+    console.log('Added a like!')
   }
 
   return (
@@ -12,7 +15,7 @@ const BlogList = ({ blogs, user }) => {
       {blogs
       .sort((a, b) => b.likes - a.likes)
       .map((blog) => (
-        <Blog key={blog.id} blog={blog} deleteBlog={handleDelete} />
+        <Blog key={blog.id} blog={blog} deleteBlog={removeBlog} addLike={addLike} />
       ))}
     </div>
   );

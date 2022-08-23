@@ -18,37 +18,6 @@ const App = () => {
 
   const blogFormRef = useRef()
 
-  // const addBlog = async (blogObject) => {
-  //   // event.preventDefault()
-  //   blogFormRef.current.toggleVisibility()
-  //   console.log('creating new blog...', title, author, url);
-  //   try {
-
-  //     const blog = await blogService.create({
-  //       title,
-  //       author,
-  //       url
-  //     })
-  //     blogService.setToken(user.token)
-  //     setBlogs(blogs.concat(blog))
-  //     setNewBlog('')
-  //     setTitle('')
-  //     setAuthor('')
-  //     setUrl('')
-  //     setMessage(`a new blog ${blog.title} by ${blog.author} added`);
-  //     setTimeout(() => {
-  //       setMessage(null);
-  //     }, 5000);
-
-  //   } catch (exception) {
-  //     setMessage('Error creating blog')
-  //     setTimeout(() => {
-  //       setMessage(null)
-  //     }, 5000)
-  //   }
-    
-  // }
-
   const addBlog = (blogObject) => {
     blogFormRef.current.toggleVisibility()
     blogService
@@ -57,19 +26,31 @@ const App = () => {
       setBlogs(blogs.concat(returnedBlog))
     })
   }
+  
+
+  const removeBlog = async (blogId, blogUser) => {
+    // console.log('User ', user)
+    // console.log('App side user.username', user.username)
+    // console.log('Blog element side ', blogUser)
+    if(user.username === blogUser){
+      await blogService.remove(blogId)
+      setBlogs(blogs.filter((blog) => blog.id !== blogId))
+    }
+    
+  }
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
   }, []);
 
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBloglistappUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
-    }
-  },[])
+  // useEffect(() => {
+  //   const loggedUserJSON = window.localStorage.getItem('loggedBloglistappUser')
+  //   if (loggedUserJSON) {
+  //     const user = JSON.parse(loggedUserJSON)
+  //     setUser(user)
+  //     blogService.setToken(user.token)
+  //   }
+  // },[])
 
   if (user === null) {
     return (
@@ -96,7 +77,7 @@ const App = () => {
       createBlog={addBlog}
         />
       </Toggleable>
-      <BlogList blogs={blogs} user={user}/>
+      <BlogList blogs={blogs} removeBlog={removeBlog}/>
       
     </div>
   );

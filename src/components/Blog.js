@@ -1,15 +1,7 @@
 import { useState } from "react"
 import blogService from '../services/blogs'
 
-// const BlogExtraInfo = ({url, likes, user}) => (
-//   <div>
-//     <p>{url}</p>
-//     <p>{likes}</p>
-//     <p>{user}</p>
-//   </div>
-// )
-
-const Blog = ({ blog, user }) => {
+const Blog = ({ blog, deleteBlog, addLike }) => {
   const [visible, setVisible] = useState(false)
   const [likeCount, setLikeCount] = useState(blog.likes)
 
@@ -25,21 +17,26 @@ const Blog = ({ blog, user }) => {
     setVisible(!visible)
   }
 
-  const addLike = async () => {
-    const blogId = blog.id
-    await blogService.update(blogId, {...blog, likes: likeCount + 1})
+  // const addLike = async () => {
+  //   const blogId = blog.id
+  //   await blogService.update(blogId, {...blog, likes: likeCount + 1})
+  //   setLikeCount(likeCount + 1)
+  //   console.log('Added a like!')
+  // }
+
+  const likeBlog = async(event) => {
+    event.preventDefault()
+    await addLike(blog, likeCount)
     setLikeCount(likeCount + 1)
-    console.log('Added a like!')
   }
 
-  const removeBlog = async () =>{
+  const removeBlog = async (event) =>{
+    event.preventDefault()
     const blogId = blog.id
+    const blogUser = blog.user.username
     if(window.confirm(`Remove blog ${blog.title} by ${blog.author}`)){
-      await blogService.remove(blogId)
-
+      await deleteBlog(blogId, blogUser)
     }
-    
-    
 
   }
 
@@ -49,16 +46,16 @@ const Blog = ({ blog, user }) => {
 
 
 return (
-  <div style={blogStyle}>
+  <div style={blogStyle} className='blog-container'>
     {blog.title} {blog.author}
-    <button onClick={toggleVisibility}>view</button>
+    <button onClick={toggleVisibility} className='view-button'>view</button>
     { visible 
     ? 
     <div>
-      <p>{blog.url}</p>
-      <div>
+      <p className="url">{blog.url}</p>
+      <div className="likes">
         likes {likeCount}
-        <button onClick={addLike}>like</button>
+        <button onClick={likeBlog}>like</button>
       </div>
       <p>{blog.user.name}</p>
       <button onClick={removeBlog} >remove</button>
