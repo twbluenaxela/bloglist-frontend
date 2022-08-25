@@ -39,13 +39,11 @@
   },
   "proxy": "http://localhost:3003",
   "devDependencies": {
-<<<<<<< HEAD
-    "cypress": "^10.6.0"
-=======
+    "cypress": "^10.6.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^14.4.3",
     "jest-watch-typeahead": "^0.6.5"
->>>>>>> 5847454c792aee4f47f7a7d6b48ee5170c5d2d4a
+
   }
 }
