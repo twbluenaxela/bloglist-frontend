@@ -41,8 +41,8 @@ const Blog = ({ blog, deleteBlog, addLike }) => {
   }
 
   // blog.user.name = blog.user.name ? blog.user.name : ''
-  blog.user ??= ''
-  blog.user.name ??= ''
+  // blog.user ??= ''
+  // blog.user.name ??= ''
 
 
 return (

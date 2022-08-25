@@ -43,14 +43,14 @@ const App = () => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
   }, [])
 
-  // useEffect(() => {
-  //   const loggedUserJSON = window.localStorage.getItem('loggedBloglistappUser')
-  //   if (loggedUserJSON) {
-  //     const user = JSON.parse(loggedUserJSON)
-  //     setUser(user)
-  //     blogService.setToken(user.token)
-  //   }
-  // },[])
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBloglistappUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
+    }
+  },[])
 
   if (user === null) {
     return (
@@ -72,7 +72,7 @@ const App = () => {
     <div>
       <h2>blogs</h2>
       <p>{user.name} logged in</p>
-      <Toggleable buttonLabel='new note' ref={blogFormRef}>
+      <Toggleable buttonLabel='new blog' ref={blogFormRef}>
         <BlogForm
           createBlog={addBlog}
         />
