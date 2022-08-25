@@ -34,7 +34,7 @@ describe('Blog app', function () {
     beforeEach(function () {
       cy.login({ username: 'tudou', password: 'tudou'})
     })
-    it.only('a blog can be liked', function() {
+    it('a blog can be created', function() {
       // cy.createBlog({title: 'some title', url:'abc.com', author: 'yo momma'})
       cy.contains('new blog').click()
       cy.get('.title').type('some title')
@@ -44,6 +44,11 @@ describe('Blog app', function () {
       cy.contains('some title', {timeout: 10000})
       
 
+    })
+    it.only('blog can be deleted', function() {
+      cy.createBlog({ title: 'the answer to the universe', author: 'bye', url: 'abc.com' })
+      cy.contains('view').click()
+      cy.contains('remove').click().should('not.contain', 'the answer to the universe')
     })
   })
 })
