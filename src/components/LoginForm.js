@@ -48,14 +48,15 @@ const LoginForm = ({
 
   return (
     <form onSubmit={handleLogin}>
-      {message !== '' && <Notification message={message} type={'error'} />}
+      <Notification message={message} type={'error'} />
       <h1>login</h1>
       <div>
           username
         <input
           type="text"
           value={username}
-          name="Username"
+          name="username"
+          id="username"
           onChange={({ target }) => setUsername(target.value)}
         />
       </div>
@@ -64,11 +65,12 @@ const LoginForm = ({
         <input
           type="password"
           value={password}
-          name="Password"
+          name="password"
+          id="password"
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
-      <button type="submit">login</button>
+      <button type="submit" id="login-button">login</button>
     </form>
   )
 }

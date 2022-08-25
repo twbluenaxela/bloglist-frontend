@@ -1,32 +1,32 @@
-import { useState, useEffect, useRef } from "react";
-import Blog from "./components/Blog";
+import { useState, useEffect, useRef } from 'react'
+import Blog from './components/Blog'
 import Toggleable from './components/Toggleable'
 import LoginForm from './components/LoginForm'
-import BlogForm from "./components/BlogForm";
+import BlogForm from './components/BlogForm'
 import BlogList from './components/BlogList'
 import Notification from './components/Notification'
-import blogService from "./services/blogs";
+import blogService from './services/blogs'
 import './index.css'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
+  const [blogs, setBlogs] = useState([])
   const [newBlog, setNewBlog] = useState('')
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const [user, setUser] = useState(null);
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [message, setMessage] = useState(null)
+  const [user, setUser] = useState(null)
 
   const blogFormRef = useRef()
 
   const addBlog = (blogObject) => {
     blogFormRef.current.toggleVisibility()
     blogService
-    .create(blogObject)
-    .then(returnedBlog => {
-      setBlogs(blogs.concat(returnedBlog))
-    })
+      .create(blogObject)
+      .then(returnedBlog => {
+        setBlogs(blogs.concat(returnedBlog))
+      })
   }
-  
+
 
   const removeBlog = async (blogId, blogUser) => {
     // console.log('User ', user)
@@ -36,12 +36,12 @@ const App = () => {
       await blogService.remove(blogId)
       setBlogs(blogs.filter((blog) => blog.id !== blogId))
     }
-    
+
   }
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
-  }, []);
+    blogService.getAll().then((blogs) => setBlogs(blogs))
+  }, [])
 
   // useEffect(() => {
   //   const loggedUserJSON = window.localStorage.getItem('loggedBloglistappUser')
@@ -65,7 +65,7 @@ const App = () => {
           setMessage={setMessage}
         />
       </div>
-    );
+    )
   }
 
   return (
@@ -73,14 +73,14 @@ const App = () => {
       <h2>blogs</h2>
       <p>{user.name} logged in</p>
       <Toggleable buttonLabel='new note' ref={blogFormRef}>
-      <BlogForm
-      createBlog={addBlog}
+        <BlogForm
+          createBlog={addBlog}
         />
       </Toggleable>
       <BlogList blogs={blogs} removeBlog={removeBlog}/>
-      
-    </div>
-  );
-};
 
-export default App;
+    </div>
+  )
+}
+
+export default App
