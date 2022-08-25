@@ -45,10 +45,23 @@ describe('Blog app', function () {
       
 
     })
-    it.only('blog can be deleted', function() {
-      cy.createBlog({ title: 'the answer to the universe', author: 'bye', url: 'abc.com' })
-      cy.contains('view').click()
-      cy.contains('remove').click().should('not.contain', 'the answer to the universe')
+    describe('and a blog is created', function() {
+      beforeEach(function(){
+        cy.createBlog({ title: 'the answer to the universe', author: 'bye', url: 'abc.com' })
+      })
+      it.only('a blog can be liked', function() {
+        cy.contains('view').click()
+        cy.contains('like').click()
+        cy.get('.blog-container').should('not.contain', 'likes 0')
+  
+      })
+      it('blog can be deleted', function() {
+        cy.contains('view').click()
+        cy.contains('remove').click().should('not.contain', 'the answer to the universe')
+      })
+
+
     })
+
   })
 })
