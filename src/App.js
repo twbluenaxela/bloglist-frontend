@@ -9,8 +9,7 @@ import blogService from './services/blogs'
 import './index.css'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
-  const [newBlog, setNewBlog] = useState('')
+  const [blogs, setBlogs] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState(null)
@@ -38,6 +37,8 @@ const App = () => {
     }
 
   }
+
+
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
@@ -77,7 +78,7 @@ const App = () => {
           createBlog={addBlog}
         />
       </Toggleable>
-      <BlogList blogs={blogs} removeBlog={removeBlog}/>
+      {blogs && <BlogList blogs={blogs} removeBlog={removeBlog}/>}
 
     </div>
   )

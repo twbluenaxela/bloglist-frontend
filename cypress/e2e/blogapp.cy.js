@@ -49,7 +49,7 @@ describe('Blog app', function () {
       beforeEach(function(){
         cy.createBlog({ title: 'the answer to the universe', author: 'bye', url: 'abc.com' })
       })
-      it.only('a blog can be liked', function() {
+      it('a blog can be liked', function() {
         cy.contains('view').click()
         cy.contains('like').click()
         cy.get('.blog-container').should('not.contain', 'likes 0')
@@ -60,7 +60,26 @@ describe('Blog app', function () {
         cy.contains('remove').click().should('not.contain', 'the answer to the universe')
       })
 
+      describe('and several more are created', function(){
+        beforeEach(function() {
+          cy.createBlog({ title: 'Xiaobao', author: 'Dabao', url: 'baidu.com' })
+          cy.createBlog({ title: 'Chinese', author: 'Dabao', url: 'baidu.com' })
+          cy.createBlog({ title: 'Chaobao', author: 'Dabao', url: 'baidu.com' })
+        })
+        it.only('blogs are in order by like count', function() {
+          cy.contains('Chinese').find('.view-button').as('chineseTitleViewButton') //should have least amount of likes
+          cy.contains('Chaobao').find('.view-button').as('chaobaoTitleViewButton') //should have most amount of likes
+          cy.get('@chineseTitleViewButton').click({ multiple: true })
+          cy.get('@chineseTitleViewButton').parent().find('.like-button').as('chineseTitleLikeButton')
+          cy.get('@chineseTitleLikeButton').click({ multiple: true }).click().click()
+          cy.get('@chaobaoTitleViewButton').click()
+          cy.get('@chaobaoTitleViewButton').parent().find('.like-button').as('chaobaoTitleLikeButton')
+          cy.get('@chaobaoTitleLikeButton').click({ multiple:true }).click().click().click().click().click()
+          cy.get('.blog-container').eq(0).should('contain', 'Chaobao')
+          cy.get('.blog-container').eq(1).should('contain', 'Chinese')
+        })
 
+      })
     })
 
   })

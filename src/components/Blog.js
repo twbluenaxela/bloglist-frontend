@@ -55,7 +55,7 @@ return (
       <p className="url">{blog.url}</p>
       <div className="likes">
         likes {likeCount}
-        <button onClick={likeBlog}>like</button>
+        <button onClick={likeBlog} className='like-button'>like</button>
       </div>
       <p>{blog.user.name}</p>
       <button onClick={removeBlog} >remove</button>
