@@ -71,7 +71,7 @@ describe('Blog app', function () {
           cy.contains('Chaobao').find('.view-button').as('chaobaoTitleViewButton') //should have most amount of likes
           cy.get('@chineseTitleViewButton').click({ multiple: true })
           cy.get('@chineseTitleViewButton').parent().find('.like-button').as('chineseTitleLikeButton')
-          cy.get('@chineseTitleLikeButton').click({ multiple: true }).click().click()
+          cy.get('@chineseTitleLikeButton').click({ multiple: true }).click().click() //not all the clicks register but thats okay, this is just for testing purposes anyway
           cy.get('@chaobaoTitleViewButton').click()
           cy.get('@chaobaoTitleViewButton').parent().find('.like-button').as('chaobaoTitleLikeButton')
           cy.get('@chaobaoTitleLikeButton').click({ multiple:true }).click().click().click().click().click()
