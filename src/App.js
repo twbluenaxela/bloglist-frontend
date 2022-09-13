@@ -72,6 +72,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
+      <Notification />
       <p>{user.name} logged in</p>
       <Toggleable buttonLabel='new blog' ref={blogFormRef}>
         <BlogForm

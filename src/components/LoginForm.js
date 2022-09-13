@@ -1,6 +1,8 @@
 import loginService from '../services/login'
 import blogService from '../services/blogs'
 import Notification from './Notification'
+import { setNotification } from '../reducers/notificationReducer'
+import { useDispatch }  from 'react-redux'
 import PropTypes from 'prop-types'
 
 const LoginForm = ({
@@ -12,6 +14,9 @@ const LoginForm = ({
   message,
   setMessage,
 }) => {
+
+  const dispatch = useDispatch()
+
   const handleLogin = async (event) => {
     event.preventDefault()
     console.log('logging in with', username, password)
@@ -29,10 +34,7 @@ const LoginForm = ({
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setMessage('Wrong username or password')
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
+      dispatch(setNotification({ message: 'Wrong username or password', timer: 3 }))
     }
   }
 
