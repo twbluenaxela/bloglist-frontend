@@ -1,29 +1,21 @@
 import Blog from './Blog'
 import blogService from '../services/blogs'
 import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
-const BlogList = ({ blogs, removeBlog }) => {
-  const [blogList, setBlogList] = useState([...blogs])
-  useEffect(() => {
-    // const fetchBlogs = () => {
-    //     if(blogs){
-    //       let sortedBlogs = blogs.sort((a,b) => b.likes - a.likes)
-    //       setBlogList(sortedBlogs)
-    //     }
-    // }
-    // fetchBlogs()
-    if(blogs) {
-      let sortedBlogs = blogs.sort((a,b) => b.likes - a.likes)
-      setBlogList(sortedBlogs)
-    }
-  },[])
-
-  // useMemo(() => )
-  // console.log('Blogs, ',blogs)
-
-  // let sortedBlogs = blogs.sort((a,b) => b.likes - a.likes)
-  // console.log('Sorted blogs', sortedBlogs)
-
+const BlogList = ({ removeBlog }) => {
+  // const [blogList, setBlogList] = useState([...blogs])
+  const dispatch = useDispatch()
+  const blogs = useSelector((state) => {
+    return [...state.blogs]
+  })
+  // useEffect(() => {
+  //   if(blogs) {
+  //     let sortedBlogs = blogs.sort((a,b) => b.likes - a.likes)
+  //     dispatch(initializeBlogs())
+  //     // setBlogList(sortedBlogs)
+  //   }
+  // },[])
 
   const addLike = async (blog, likeCount) => {
     const blogId = blog.id
@@ -43,7 +35,7 @@ const BlogList = ({ blogs, removeBlog }) => {
 
   return (
     <div>
-      {blogList
+      {blogs
         .map((blog) => (
           <Blog key={blog.id} blog={blog} deleteBlog={removeBlog} addLike={addLike} />
         ))}

@@ -6,24 +6,30 @@ import BlogForm from './components/BlogForm'
 import BlogList from './components/BlogList'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
+import { useDispatch } from 'react-redux'
+import { createBlog, initializeBlogs, deleteBlog } from './reducers/blogReducer'
 import './index.css'
 
+
 const App = () => {
-  const [blogs, setBlogs] = useState(null)
+  // const [blogs, setBlogs] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState(null)
   const [user, setUser] = useState(null)
 
   const blogFormRef = useRef()
+  const dispatch = useDispatch()
 
   const addBlog = (blogObject) => {
     blogFormRef.current.toggleVisibility()
-    blogService
-      .create(blogObject)
-      .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog))
-      })
+    dispatch(createBlog(blogObject))
+    // setBlogs.concat(blog)
+    // blogService 
+    //   .create(blogObject)
+    //   .then(returnedBlog => {
+    //     setBlogs(blogs.concat(returnedBlog))
+    //   })
   }
 
 
@@ -32,8 +38,9 @@ const App = () => {
     // console.log('App side user.username', user.username)
     // console.log('Blog element side ', blogUser)
     if(user.username === blogUser){
-      await blogService.remove(blogId)
-      setBlogs(blogs.filter((blog) => blog.id !== blogId))
+      // await blogService.remove(blogId)
+      dispatch(deleteBlog(blogId))
+      // setBlogs(blogs.filter((blog) => blog.id !== blogId))
     }
 
   }
@@ -41,7 +48,8 @@ const App = () => {
 
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
+    dispatch(initializeBlogs())
+    // blogService.getAll().then((blogs) => setBlogs(blogs))
   }, [])
 
   useEffect(() => {
@@ -79,7 +87,7 @@ const App = () => {
           createBlog={addBlog}
         />
       </Toggleable>
-      {blogs && <BlogList blogs={blogs} removeBlog={removeBlog}/>}
+      {<BlogList removeBlog={removeBlog}/>}
 
     </div>
   )
