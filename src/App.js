@@ -1,9 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import Blog from "./components/Blog";
-import Toggleable from "./components/Toggleable";
 import LoginForm from "./components/LoginForm";
-import BlogForm from "./components/BlogForm";
-import BlogList from "./components/BlogList";
 import Notification from "./components/Notification";
 import blogService from "./services/blogs";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,6 +21,7 @@ import Users from "./components/Users";
 import BlogView from "./components/BlogView";
 import axios from "axios";
 import User from "./components/User";
+import blogs from "./services/blogs";
 
 const App = () => {
   // const [blogs, setBlogs] = useState(null)
@@ -36,6 +34,9 @@ const App = () => {
   const user = useSelector((state) => {
     return state.login;
   });
+  const blogs = useSelector((state) => {
+    return state.blogs
+  })
 
   const loggedUserJSON = window.localStorage.getItem("loggedBloglistappUser");
   // console.log('Current logged user: ', loggedUserJSON)
@@ -80,6 +81,11 @@ const App = () => {
     ? users.find((u) => u.id === match.params.id)
     : null;
   console.log("Matched user: ", matchedUser);
+  const blogMatch = useMatch('/blogs/:id')
+  const matchedBlog = blogMatch 
+  ? blogs.find((b) => b.id === blogMatch.params.id)
+  : null;
+  console.log('Matched blog', matchedBlog);
 
   if (user === null && !loggedUser) {
     return (
@@ -107,6 +113,7 @@ const App = () => {
         <Route path="/users" element={<Users users={users} />} />
         <Route path="/" element={<BlogView />} />
         <Route path="/users/:id" element={<User user={matchedUser} />} />
+        <Route path='/blogs/:id' element={<Blog blog={matchedBlog} />} />
       </Routes>
     </div>
   );
