@@ -18,23 +18,20 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Link,
-  Navigate,
-  useParams,
-  useNavigate,
   useMatch,
 } from "react-router-dom";
 import Users from "./components/Users";
 import BlogView from "./components/BlogView";
+import axios from "axios";
+import User from "./components/User";
 
 const App = () => {
   // const [blogs, setBlogs] = useState(null)
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(null);
-  // const [user, setUser] = useState(null)
+  const [users, setUsers] = useState([]);
 
-  const blogFormRef = useRef();
   const dispatch = useDispatch();
   const user = useSelector((state) => {
     return state.login;
@@ -47,22 +44,17 @@ const App = () => {
     loggedUser = JSON.parse(loggedUserJSON);
   }
 
-  // if(user){
-  // window.localStorage.setItem(
-  //   'loggedBloglistappUser',
-  //   JSON.stringify(user)
-  // )
-  // blogService.setToken(user.token)
-  // }
-
-
-
-  
-
   const handleLogout = (e) => {
     e.preventDefault();
     dispatch(logout());
   };
+
+  useEffect(() => {
+    axios.get("http://localhost:3003/api/users").then((response) => {
+      console.log("Users: ", response.data);
+      setUsers(response.data);
+    });
+  }, []);
 
   useEffect(() => {
     dispatch(initializeBlogs());
@@ -75,12 +67,19 @@ const App = () => {
     if (loggedUserJSON) {
       const parsedUser = JSON.parse(loggedUserJSON);
       console.log("Parsed user", parsedUser);
-      // setUser(user)
       if (parsedUser !== null) {
         blogService.setToken(parsedUser.token);
       }
     }
   }, []);
+
+  const match = useMatch("/users/:id");
+  console.log("Match: ", match);
+  // console.log("Users have been set in app: ", users);
+  const matchedUser = match
+    ? users.find((u) => u.id === match.params.id)
+    : null;
+  console.log("Matched user: ", matchedUser);
 
   if (user === null && !loggedUser) {
     return (
@@ -100,17 +99,15 @@ const App = () => {
 
   return (
     <div>
-      <Router>
-        <h2>blogs</h2>
-        <Notification />
-        <p>{user !== null ? user.name : loggedUser.name} logged in</p>
-        <button onClick={handleLogout}>logout</button>
-        <Routes>
-          <Route path='/users' element={<Users />} />
-          <Route path='/' element={<BlogView />} />
-        </Routes>
-      </Router>
-
+      <h2>blogs</h2>
+      <Notification />
+      <p>{user !== null ? user.name : loggedUser.name} logged in</p>
+      <button onClick={handleLogout}>logout</button>
+      <Routes>
+        <Route path="/users" element={<Users users={users} />} />
+        <Route path="/" element={<BlogView />} />
+        <Route path="/users/:id" element={<User user={matchedUser} />} />
+      </Routes>
     </div>
   );
 };
