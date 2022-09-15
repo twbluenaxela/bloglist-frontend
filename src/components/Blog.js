@@ -1,22 +1,26 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
 import { likeBlog, deleteBlog } from "../reducers/blogReducer"
 import blogService from '../services/blogs'
+import axios from "axios"
 
 const Blog = ({ blog }) => {
   const dispatch = useDispatch()
+  const [comments, setComments] = useState([])
+
+
 
   if(!blog) {
     return null
   }
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom:5
-  }
+  useEffect(() => {
+    axios.get(`http://localhost:3003/api/blogs/${blog.id}/comments`).then((response) => {
+      console.log('Comments: ', response.data)
+      setComments(response.data)
+    }
+    )
+  },[])
 
   const clickLike = () => {
     dispatch(likeBlog(blog.id))
@@ -49,8 +53,12 @@ return (
       <p>added by {blog.user.name}</p>
       <button onClick={clickRemoveBlog} >remove</button>
     </div>
-
-
+    <div>
+      <h3>comments</h3>
+        <ul>
+        {comments.map(comment => <li key={comment.content}>{comment.content}</li>)}
+        </ul>
+    </div>
   </div>  
 )
 }
