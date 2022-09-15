@@ -5,23 +5,22 @@ import Notification from "./components/Notification";
 import blogService from "./services/blogs";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  createBlog,
   initializeBlogs,
-  deleteBlog,
 } from "./reducers/blogReducer";
 import { logout } from "./reducers/loginReducer";
 import "./index.css";
 import {
-  BrowserRouter as Router,
   Routes,
   Route,
   useMatch,
+  Navigate,
+  Link
 } from "react-router-dom";
 import Users from "./components/Users";
 import BlogView from "./components/BlogView";
 import axios from "axios";
 import User from "./components/User";
-import blogs from "./services/blogs";
+import { Navbar, Nav } from "react-bootstrap";
 
 const App = () => {
   // const [blogs, setBlogs] = useState(null)
@@ -87,6 +86,10 @@ const App = () => {
   : null;
   console.log('Matched blog', matchedBlog);
 
+  const padding = {
+    padding: 5
+  }
+
   if (user === null && !loggedUser) {
     return (
       <div>
@@ -105,10 +108,31 @@ const App = () => {
 
   return (
     <div>
-      <h2>blogs</h2>
+      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" >
+        <Navbar.Toggle aria-controls='responsive-navbar-var' />
+        <Navbar.Collapse id='responsive-navbar-nav' >
+          <Nav className="me-auto" >
+            <Nav.Link href='#' as="span" >
+            <Link to="/" style={padding} >blogs</Link>
+            </Nav.Link>
+            <Nav.Link href='#' as="span" >
+            <Link to='/users' style={padding} >users</Link>
+            </Nav.Link>
+            <Nav.Link href='#' as="span" >
+            <p>{user !== null ? user.name : loggedUser.name} logged in</p>
+            </Nav.Link>
+            <Nav.Link href='#' as="span" >
+            <button onClick={handleLogout}>logout</button>
+            </Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
+      <div>
+        
+      </div>
+      <h2>blog app</h2>
       <Notification />
-      <p>{user !== null ? user.name : loggedUser.name} logged in</p>
-      <button onClick={handleLogout}>logout</button>
+      
       <Routes>
         <Route path="/users" element={<Users users={users} />} />
         <Route path="/" element={<BlogView />} />
