@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { displayMessage, setNotification } from '../reducers/notificationReducer'
 import Notification from './Notification'
 
@@ -8,6 +8,7 @@ const BlogForm = ({ createBlog }) => {
   const [message, setMessage] = useState(null)
 
   const dispatch = useDispatch()
+  const currentUser = useSelector((state) => state.users)
 
   const handleChange = (event) => {
     const value = event.target.value

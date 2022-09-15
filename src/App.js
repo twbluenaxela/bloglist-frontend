@@ -6,7 +6,7 @@ import BlogForm from './components/BlogForm'
 import BlogList from './components/BlogList'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { createBlog, initializeBlogs, deleteBlog } from './reducers/blogReducer'
 import './index.css'
 
@@ -16,10 +16,28 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState(null)
-  const [user, setUser] = useState(null)
+  // const [user, setUser] = useState(null)
 
   const blogFormRef = useRef()
   const dispatch = useDispatch()
+  const user = useSelector((state) => {
+    return state.users
+  })
+
+  const loggedUserJSON = window.localStorage.getItem('loggedBloglistappUser')
+  console.log(loggedUserJSON)
+  const loggedUser = JSON.parse(loggedUserJSON)
+
+
+
+  // if(user){
+    // window.localStorage.setItem(
+    //   'loggedBloglistappUser',
+    //   JSON.stringify(user)
+    // )
+    // blogService.setToken(user.token)
+  // }
+
 
   const addBlog = (blogObject) => {
     blogFormRef.current.toggleVisibility()
@@ -53,15 +71,19 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBloglistappUser')
+    // const loggedUserJSON = window.localStorage.getItem('loggedBloglistappUser')
+    // console.log('Logged user JSON', loggedUserJSON)
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
+      const parsedUser = JSON.parse(loggedUserJSON)
+      console.log('Parsed user', parsedUser)
+      // setUser(user)
+      if(parsedUser !== null){
+        blogService.setToken(parsedUser.token)
+      }
     }
   },[])
 
-  if (user === null) {
+  if (user === null && loggedUserJSON === '') {
     return (
       <div>
         <LoginForm
@@ -69,10 +91,10 @@ const App = () => {
           setUsername={setUsername}
           password={password}
           setPassword={setPassword}
-          setUser={setUser}
           message={message}
           setMessage={setMessage}
         />
+        {}
       </div>
     )
   }
@@ -81,7 +103,9 @@ const App = () => {
     <div>
       <h2>blogs</h2>
       <Notification />
-      <p>{user.name} logged in</p>
+      <p>{user
+      ? user.name
+      : loggedUser.name} logged in</p>
       <Toggleable buttonLabel='new blog' ref={blogFormRef}>
         <BlogForm
           createBlog={addBlog}
