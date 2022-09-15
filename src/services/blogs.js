@@ -38,4 +38,19 @@ const remove = async (id) => {
   return response.data
 }
 
-export default { getAll, setToken, create, update, remove }
+const like = async (id) => {
+  const config = {
+    headers: { Authorization: token },
+  }
+  const blogUrl = `${baseUrl}/${id}`
+  const request = await axios.get(`${baseUrl}/${id}`, config)
+  const blogToVoteOn = request.data
+  console.log('Blog to like:', blogToVoteOn)
+  const updatedBlog= { ...blogToVoteOn, likes: blogToVoteOn.likes + 1 }
+  console.log('Updated blog: ', updatedBlog)
+  const response = await axios.put(blogUrl, updatedBlog, config)
+  return response.data
+
+}
+
+export default { getAll, setToken, create, update, remove, like }
